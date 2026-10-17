@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0e14">
+<title>GamesForSchoolGFS</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0b0e14;
+  --panel: #141925;
+  --border: #282f40;
+  --muted: #9ba6b8;
+  --accent: #8b70ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #f5f6fb;
+  font-family: system-ui, Arial, sans-serif;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px clamp(16px, 4vw, 48px);
+  background: #0b0e14ed;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.brand { font-weight: 850; font-size: 19px; }
+.brand span { color: var(--accent); }
+nav { display: flex; gap: 8px; flex-wrap: wrap; }
+button, input, a { font: inherit; }
+button, .link {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #f5f6fb;
+  background: var(--panel);
+  text-decoration: none;
+}
+button:hover, .link:hover { border-color: var(--accent); }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+main {
+  width: min(1100px, 100%);
+  margin: auto;
+  padding: 32px 20px 60px;
+}
+section { scroll-margin-top: 90px; margin-bottom: 38px; }
+.hero {
+  padding: clamp(25px, 6vw, 55px);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: radial-gradient(ellipse at top right,
+    #44337855, transparent 60%), var(--panel);
+}
+.eyebrow {
+  color: #b8aaff;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 750;
+}
+h1 { font-size: clamp(32px, 7vw, 54px); margin: 12px 0; }
+h2 { font-size: 23px; }
+p { color: var(--muted); line-height: 1.65; }
+.search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+input {
+  flex: 1;
+  min-width: 180px;
+  padding: 13px;
+  background: #0b0e14;
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.primary { background: var(--accent); border-color: var(--accent); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.card {
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+.card h3 { margin-top: 0; }
+.player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #050609;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.player iframe { width: 100%; height: 100%; border: 0; }
+.player-placeholder {
+  display: grid;
+  place-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.small { font-size: 13px; }
+footer {
+  padding: 25px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span>GFS</span> GamesForSchool</div>
+  <nav aria-label="Main navigation">
+    <button data-page="home">Home</button>
+    <button data-page="watch">Watch</button>
+    <button data-page="school">School</button>
+  </nav>
+</header>
+
+<main>
+  <section id="home" class="hero">
+    <div class="eyebrow">YOUR PERSONAL MEDIA SPACE</div>
+    <h1>Welcome to GFS.</h1>
+    <p>Discover videos, open your favorite school resources,
+       and keep everything organized in one place.</p>
+    <form id="searchForm" class="search">
+      <input id="query" type="search"
+        placeholder="Search for a video..."
+        aria-label="Video search" required>
+      <button class="primary" type="submit">Search videos</button>
+    </form>
+    <p class="small">Search opens results only when you choose to submit.</p>
+  </section>
+
+  <section id="watch">
+    <h2>Video player</h2>
+    <p>Paste a YouTube video URL or video ID to embed a supported video.</p>
+    <form id="playerForm" class="search">
+      <input id="videoUrl" type="url"
+        placeholder="https://www.youtube.com/watch?v=..."
+        aria-label="Video URL">
+      <button class="primary" type="submit">Load video</button>
+    </form>
+    <div class="player" id="player" style="margin-top:16px">
+      <div class="player-placeholder" id="placeholder">
+        <div>
+          <div style="font-size:36px">▶</div>
+          <strong>Your video goes here</strong>
+          <p class="small">Choose a supported video URL above.</p>
+        </div>
+      </div>
+    </div>
+    <p id="playerMessage" class="small" role="status">
+      No video loaded.
+    </p>
+  </section>
+
+  <section id="school">
+    <h2>School dashboard</h2>
+    <p>Shortcuts to educational tools. External links open only
+       when you select them.</p>
+    <div class="grid">
+      <article class="card">
+        <h3>Google Classroom</h3>
+        <p>Assignments and class materials.</p>
+        <a class="link" href="https://classroom.google.com/">
+          Open Classroom
+        </a>
+      </article>
+      <article class="card">
+        <h3>Google Drive</h3>
+        <p>Your documents and school files.</p>
+        <a class="link" href="https://drive.google.com/">
+          Open Drive
+        </a>
+      </article>
+      <article class="card">
+        <h3>YouTube</h3>
+        <p>Search videos and educational channels.</p>
+        <a class="link" href="https://www.youtube.com/">
+          Open YouTube
+        </a>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Your space</h2>
+    <div class="card">
+      <h3>Built for your Chromebook</h3>
+      <p>Responsive layout, keyboard-friendly controls,
+         and simple navigation. This starter does not run a
+         proxy or bypass school network restrictions.</p>
+      <button id="homeButton">Back to home</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  GamesForSchoolGFS · Your links, your media space.
+</footer>
+
+<script>
+const pages = ["home", "watch", "school"];
+
+function showPage(id) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.page);
+  });
+});
+
+document.getElementById("homeButton").addEventListener("click", () => {
+  showPage("home");
+});
+
+document.getElementById("searchForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const query = document.getElementById("query").value.trim();
+  if (!query) return;
+
+  // Explicitly requested search; no automatic redirect.
+  const url = new URL("https://www.youtube.com/results");
+  url.searchParams.set("search_query", query);
+  const link = document.createElement("a");
+  link.href = url.href;
+  link.textContent = "Open video search results";
+  link.className = "link";
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+
+  let result = document.getElementById("searchResult");
+  if (!result) {
+    result = document.createElement("div");
+    result.id = "searchResult";
+    result.style.marginTop = "14px";
+    document.getElementById("searchForm").after(result);
+  }
+  result.replaceChildren(link);
+});
+
+function getYouTubeId(value) {
+  let url;
+  try { url = new URL(value); } catch { return null; }
+
+  const host = url.hostname.toLowerCase().replace(/^www\./, "");
+  if (host === "youtu.be") {
+    return url.pathname.split("/").filter(Boolean)[0] || null;
+  }
+  if (!["youtube.com", "m.youtube.com",
+        "youtube-nocookie.com"].includes(host)) return null;
+
+  if (url.pathname === "/watch") return url.searchParams.get("v");
+  const parts = url.pathname.split("/").filter(Boolean);
+  if (["embed", "shorts", "live"].includes(parts[0])) {
+    return parts[1] || null;
+  }
+  return null;
+}
+
+document.getElementById("playerForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const value = document.getElementById("videoUrl").value.trim();
+  const id = getYouTubeId(value);
+  const message = document.getElementById("playerMessage");
+  const player = document.getElementById("player");
+
+  if (!id || !/^[\w-]{11}$/.test(id)) {
+    message.textContent =
+      "Enter a valid YouTube video URL or 11-character video ID.";
+    return;
+  }
+
+  const frame = document.createElement("iframe");
+  frame.src = "https://www.youtube-nocookie.com/embed/" +
+    encodeURIComponent(id);
+  frame.title = "YouTube video player";
+  frame.allow =
+    "accelerometer; autoplay; clipboard-write; encrypted-media; " +
+    "gyroscope; picture-in-picture; web-share";
+  frame.allowFullscreen = true;
+  frame.referrerPolicy = "strict-origin-when-cross-origin";
+
+  player.replaceChildren(frame);
+  message.textContent =
+    "Video loaded. Playback depends on availability and network policy.";
+});
+</script>
+</body>
+</html>
